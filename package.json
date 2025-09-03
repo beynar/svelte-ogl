@@ -53,6 +53,7 @@
 		]
 	},
 	"dependencies": {
-		"@sveltejs/adapter-cloudflare": "^7.2.3"
+		"@sveltejs/adapter-cloudflare": "^7.2.3",
+		"ogl": "^1.0.11"
 	}
 }
