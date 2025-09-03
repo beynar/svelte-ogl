@@ -35,7 +35,7 @@
         meshOptions.geometry ||
         getContext<any>("geometry")?.geometry ||
         getContext<any>("triangle")?.triangle;
-      this.mesh = new Mesh(ogl.gl!, { ...meshOptions, program, geometry });
+      this.mesh = new Mesh(ogl.gl, { ...meshOptions, program, geometry });
       setContext("mesh", this);
       ogl.addChild(this);
       om?.(this);
@@ -81,12 +81,10 @@
   ogl.useEvent("pointerup", mesh, onPointerUp);
 
   $effect(() => {
-    Object.keys(meshOptions).forEach((key) => {
-      Object.assign(
-        mesh.mesh,
-        key,
-        meshOptions[key as keyof typeof meshOptions]
-      );
+    Object.keys(meshOptions || {}).forEach((key) => {
+      Object.assign(mesh.mesh, {
+        [key]: meshOptions[key as keyof typeof meshOptions],
+      });
     });
   });
 </script>

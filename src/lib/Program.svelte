@@ -26,7 +26,8 @@
     ) {
       this.ogl = ogl;
       this.id = id;
-      this.program = new Program(ogl.gl!, programOptions);
+      this.program = new Program(ogl.gl, programOptions);
+
       setContext("program", this);
       ogl.addChild(this);
       om?.(this);
@@ -81,13 +82,10 @@
   ogl.useEvent("pointerup", program, onPointerUp);
 
   $effect(() => {
-    console.log("programOptions");
     Object.keys(programOptions).forEach((key) => {
-      Object.assign(
-        program.program,
-        key,
-        programOptions[key as keyof typeof programOptions]
-      );
+      Object.assign(program.program, {
+        [key]: programOptions[key as keyof typeof programOptions],
+      });
     });
   });
 </script>

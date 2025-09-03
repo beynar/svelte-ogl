@@ -155,58 +155,51 @@ void main() {
     }
   }}
 >
-  <Program
-    onResize={({ width, height }, program) => {
-      program.program.uniforms.iResolution.value = [
-        width,
-        height,
-        width / height,
-      ];
-    }}
-    {vertex}
-    {fragment}
-    uniforms={{
-      iTime: { value: 0 },
-      iResolution: { value: [0, 0, 0] },
-      uSpinRotation: { value: spinRotation },
-      uSpinSpeed: { value: spinSpeed },
-      uOffset: { value: offset },
-      uColor1: { value: color1Vec4 },
-      uColor2: { value: color2Vec4 },
-      uColor3: { value: color3Vec4 },
-      uContrast: { value: contrast },
-      uLighting: { value: lighting },
-      uSpinAmount: { value: spinAmount },
-      uPixelFilter: { value: pixelFilter },
-      uSpinEase: { value: spinEase },
-      uIsRotate: { value: isRotate },
-      uMouse: { value: [0, 0] },
-    }}
-    onUpdate={({ time }, program) => {
-      program.program.uniforms.iTime.value = time * 0.001;
-
-      // Update uniforms with current prop values for reactivity
-      program.program.uniforms.uSpinRotation.value = spinRotation;
-      program.program.uniforms.uSpinSpeed.value = spinSpeed;
-      program.program.uniforms.uOffset.value = offset;
-      program.program.uniforms.uColor1.value = color1Vec4;
-      program.program.uniforms.uColor2.value = color2Vec4;
-      program.program.uniforms.uColor3.value = color3Vec4;
-      program.program.uniforms.uContrast.value = contrast;
-      program.program.uniforms.uLighting.value = lighting;
-      program.program.uniforms.uSpinAmount.value = spinAmount;
-      program.program.uniforms.uPixelFilter.value = pixelFilter;
-      program.program.uniforms.uSpinEase.value = spinEase;
-      program.program.uniforms.uIsRotate.value = isRotate;
-      program.program.uniforms.uMouse.value = mousePos;
-    }}
-  >
-    <Triangle>
-      <Mesh
-        onUpdate={({ time }, mesh) => {
-          mesh.ogl.renderer?.render({ scene: mesh.mesh });
-        }}
-      />
-    </Triangle>
-  </Program>
+  {#snippet children(ogl)}
+    <Program
+      onResize={({ width, height }, program) => {
+        program.program.uniforms.iResolution.value = [
+          width,
+          height,
+          width / height,
+        ];
+      }}
+      {vertex}
+      {fragment}
+      uniforms={{
+        iTime: { value: 0 },
+        iResolution: {
+          value: [
+            ogl.renderer?.width,
+            ogl.renderer?.height,
+            ogl.renderer?.width / ogl.renderer?.height,
+          ],
+        },
+        uSpinRotation: { value: spinRotation },
+        uSpinSpeed: { value: spinSpeed },
+        uOffset: { value: offset },
+        uColor1: { value: color1Vec4 },
+        uColor2: { value: color2Vec4 },
+        uColor3: { value: color3Vec4 },
+        uContrast: { value: contrast },
+        uLighting: { value: lighting },
+        uSpinAmount: { value: spinAmount },
+        uPixelFilter: { value: pixelFilter },
+        uSpinEase: { value: spinEase },
+        uIsRotate: { value: isRotate },
+        uMouse: { value: mousePos },
+      }}
+      onUpdate={({ time }, program) => {
+        program.program.uniforms.iTime.value = time * 0.001;
+      }}
+    >
+      <Triangle>
+        <Mesh
+          onUpdate={({ time }, mesh) => {
+            mesh.ogl.renderer?.render({ scene: mesh.mesh });
+          }}
+        />
+      </Triangle>
+    </Program>
+  {/snippet}
 </Canvas>

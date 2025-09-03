@@ -1,15 +1,7 @@
 <script lang="ts" module>
   import { Color, Renderer } from "ogl";
   import type { RendererOptions } from "./types/core/Renderer.js";
-  import {
-    getContext,
-    onDestroy,
-    onMount,
-    setContext,
-    untrack,
-    type Snippet,
-  } from "svelte";
-  import { on } from "svelte/events";
+  import { getContext, onDestroy, setContext, type Snippet } from "svelte";
 
   type EventType =
     | "resize"
@@ -148,10 +140,8 @@
 
     addChild = (child: any) => {
       this.children.set(child.id, child);
-      onMount(() => {
-        return () => {
-          this.children.delete(child.id);
-        };
+      onDestroy(() => {
+        this.children.delete(child.id);
       });
     };
 
@@ -189,16 +179,13 @@
       this.raf = requestAnimationFrame(this.onUpdate);
 
       return () => {
+        resizeObserver.disconnect();
         this.mounted = false;
         this.renderer?.gl.canvas.remove();
-        if (
-          this.container &&
-          this.gl &&
-          this.gl.canvas.parentNode === this.container
-        ) {
-          this.container.removeChild(this.gl.canvas);
+        this.mounted = false;
+        if (this.gl?.canvas.parentNode === this.container) {
+          this.container?.removeChild(this.gl.canvas);
         }
-        this.gl?.getExtension("WEBGL_lose_context")?.loseContext();
         this.renderer = null;
         this.container = null;
         this.canvas = null;
@@ -285,6 +272,7 @@
   onmouseleave={oglContext.mouseEvent("mouseleave")}
   onmouseenter={oglContext.mouseEvent("mouseenter")}
   onpointerdown={oglContext.mouseEvent("pointerdown")}
+  onpointerup={oglContext.mouseEvent("pointerup")}
   class={className}
   {@attach (node) => oglContext.attachment(node, rendererOptions)}
   style:width="100%"

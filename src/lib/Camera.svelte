@@ -23,7 +23,7 @@
     ) {
       this.ogl = ogl;
       this.id = id;
-      this.camera = new Camera(ogl.gl!, cameraOptions);
+      this.camera = new Camera(ogl.gl, cameraOptions);
       setContext("camera", this);
       ogl.addChild(this);
       om?.(this);
@@ -69,15 +69,11 @@
   ogl.useEvent("pointerup", camera, onPointerUp);
 
   $effect(() => {
-    if (cameraOptions) {
-      Object.keys(cameraOptions).forEach((key) => {
-        Object.assign(
-          camera.camera,
-          key,
-          cameraOptions[key as keyof typeof cameraOptions]
-        );
+    Object.keys(cameraOptions || {}).forEach((key) => {
+      Object.assign(camera.camera, {
+        [key]: cameraOptions[key as keyof typeof cameraOptions],
       });
-    }
+    });
   });
 </script>
 

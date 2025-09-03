@@ -24,7 +24,7 @@
     ) {
       this.ogl = ogl;
       this.id = id;
-      this.triangle = new Triangle(ogl.gl!, triangleOptions);
+      this.triangle = new Triangle(ogl.gl, triangleOptions);
       setContext("triangle", this);
       ogl.addChild(this);
       om?.(this);
@@ -42,6 +42,8 @@
       this.triangle.attributes = geometryOptions;
       for (let key in geometryOptions) {
         this.triangle.addAttribute(key, geometryOptions[key]);
+        const attr = this.triangle.attributes[key];
+        console.log(attr);
       }
     }
   }
